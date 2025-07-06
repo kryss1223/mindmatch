@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestionar miembros</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0D0628] text-white font-mono p-6">
+  <div class="max-w-2xl mx-auto bg-[#130D36] p-6 rounded-lg shadow-lg">
+    <h1 class="text-xl font-bold text-purple-400 mb-4">👥 Gestionar miembros del proyecto</h1>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-4">
+        <label for="id_members" class="block text-sm text-purple-300 mb-1">Selecciona amigos para añadir:</label>
+        {{ form.members }}
+        {% if form.members.errors %}
+          <p class="text-red-500 text-sm">{{ form.members.errors }}</p>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
+        ➕ Añadir miembros
+      </button>
+    </form>
+
+    <div class="flex justify-between items-center">
+    <div>
+      <p class="text-sm text-green-400">Miembros del proyecto:</p>
+      <ul class="list-disc list-inside mt-1">
+        {% for member in project.members.all %}
+          <li>{{ member.username }}</li>
+          <form method="post" action="{% url 'remove_project_member' project.id member.id %}">
+            {% csrf_token %}
+            <button type="submit" class="text-red-400 hover:text-red-600 text-sm">❌</button>
+          </form>
+        {% empty %}
+          <li class="text-gray-400 text-sm">No hay miembros todavía</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="mt-6">
+      <a href="{% url 'project_detail' project.id %}" class="text-purple-400 hover:underline text-sm">
+        ← Volver al proyecto
+      </a>
+    </div>
+  </div>
+</body>
+</html>

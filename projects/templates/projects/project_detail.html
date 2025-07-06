@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load form_filters %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Detail - BrainMatch</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#0D0628] text-white font-mono flex items-center justify-center min-h-screen p-6">
+
+  <div class="bg-[#130D36] p-8 rounded-xl shadow-lg w-full max-w-2xl space-y-4">
+    
+    <div class="flex justify-between items-center">
+      <h1 class="text-3xl font-bold text-purple-400 ">{{ project.title }}</h1>
+      <a href="{% url 'edit_project' project.id %}" class="text-sm text-purple-400 hover:underline">✏️ Editar proyecto</a>
+      <a href="{% url 'add_members' project.id %}" class="text-sm text-purple-400 hover:underline">✏️ Añadir miembros</a>
+    </div>
+
+    <div>
+      <p class="text-sm text-green-400">Autor:</p>
+      <p class="text-lg font-semibold">{{ project.author.username }}</p>
+    </div>
+
+    <div>
+      <p class="text-sm text-green-400">Descripción:</p>
+      <p class="text-base">{{ project.description }}</p>
+    </div>
+
+    <div>
+      <p class="text-sm text-green-400">Skills requeridas:</p>
+      <div class="flex flex-wrap gap-2 mt-1">
+        {% for skill in project.skills.all %}
+          <span class="bg-purple-600/20 text-purple-300 text-sm px-3 py-1 rounded-full">{{ skill.name }}</span>
+        {% empty %}
+          <span class="text-gray-400 text-sm">No skills añadidas</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row sm:justify-between gap-4">
+      <div>
+        <p class="text-sm text-green-400">Estado:</p>
+        <p>{{ project.get_availability_display }}</p>
+      </div>
+      <div>
+        <p class="text-sm text-green-400">Privacidad:</p>
+        <p>{{ project.get_privacy_display }}</p>
+      </div>
+    </div>
+
+    <div class="flex justify-between items-center">
+    <div>
+      <p class="text-sm text-green-400">Miembros del proyecto:</p>
+      <ul class="list-disc list-inside mt-1">
+        {% for member in project.members.all %}
+          <li>{{ member.username }}</li>
+        {% empty %}
+          <li class="text-gray-400 text-sm">No hay miembros todavía</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    {% if project.links.github or project.links.discord %}
+    <div>
+      <p class="text-sm text-green-400">Links:</p>
+      <ul class="mt-1 space-y-1">
+        {% if project.links.github %}
+          <li><a href="{{ project.links.github }}" target="_blank" class="text-blue-400 underline">🔗 GitHub</a></li>
+        {% endif %}
+        {% if project.links.discord %}
+          <li><a href="{{ project.links.discord }}" target="_blank" class="text-blue-400 underline">💬 Discord</a></li>
+        {% endif %}
+      </ul>
+    </div>
+    {% endif %}
+    <div class="flex justify-center">
+        <a href="{% url 'user_profile' %}" class="text-sm text-purple-400 hover:underline">
+        ← Back to profile
+        </a>
+    </div>
+  </div>
+
+</body>
+</html>

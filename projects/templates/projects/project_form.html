@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load form_filters %}
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Project - BrainMatch</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<html class="bg-[#0D0628] text-white font-mono flex items-center justify-center min-h-screen p-6">
+    <body class="bg-[#130D36] p-8 rounded-xl shadow-xl w-full max-w-xl">
+    <h1 class="text-2xl font-bold text-purple-400 tracking-wide">🧠 brainmatch/edit_project</h1>
+
+    <form method="post" class="space-y-6">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div>
+        <label class="text-purple-400 text-xs mb-1" for="id_title">> project.title</label>
+        {{ form.title|add_class:"w-full px-4 py-2 rounded bg-[#1C114A] text-white focus:outline-none focus:ring-2 focus:ring-purple-500" }}
+        {{ form.title.errors }}
+    </div>
+
+    <div>
+    <label class="text-purple-400 text-xs mb-1" for="id_description">> project.description</label>
+        {{ form.description|add_class:"w-full px-4 py-2 rounded bg-[#1C114A] text-white focus:outline-none focus:ring-2 focus:ring-purple-500" }}
+        {{ form.description.errors }}
+    </div>
+    
+    <div>
+        <label class="text-purple-400 text-xs mb-1" for="id_availability">> project.availability</label>
+        {{ form.availability|add_class:"w-full px-4 py-2 rounded bg-[#1C114A] text-white" }}
+        {{ form.availability.errors }}
+    </div>
+
+    <div>
+        <label class="text-purple-400 text-xs mb-1" for="id_state">> project.state</label>
+        {{ form.active_state|add_class:"w-full px-4 py-2 rounded bg-[#1C114A] text-white" }}
+        {{ form.active_state.errors }}
+    </div>
+
+    <div>
+        <label class="text-purple-400 text-xs mb-1" for="id_privacy">> project.privacy</label>
+        {{ form.privacy|add_class:"w-full px-4 py-2 rounded bg-[#1C114A] text-white" }}
+        {{ form.privacy.errors }}
+    </div>
+
+    <!-- SKILLS -->
+      <div>
+        <h2 class="text-purple-400 text-xs mb-1">> project.skills</h2>
+        <input id="skills_input" name="skills_input" type="text"
+               value="{{ skills_input }}"
+               placeholder="Write skills separated by commas"
+               class="w-full px-4 py-2 rounded bg-[#1C114A] text-white">
+        <div class="mt-2 flex flex-wrap gap-2">
+          {% for skill in request.project.skills.all %}
+            <span class="bg-purple-600 text-white px-3 py-1 rounded-full text-sm">{{ skill.name }}</span>
+          {% empty %}
+            <p class="text-gray-400 text-sm">No skills added yet.</p>
+          {% endfor %}
+        </div>
+      </div>
+    
+
+    <!--MEMBERS-->
+    <div>
+        <label class="text-purple-400 text-xs mb-1">> project.members</label>
+        <select name="members" multiple size="6"
+                class="w-full px-4 py-2 rounded bg-[#1C114A] text-white">
+            {% for friend in request.user.friends.all %}
+            <option value="{{ friend.id }}">{{ friend.username }}</option>
+            {% endfor %}
+        </select>
+        <p class="text-sm text-white/60 mt-1">Puedes seleccionar varios amigos con Ctrl o Cmd</p>
+    </div>
+
+    
+    <!-- Aquí los links personalizados -->
+    <div>
+        <label for="id_github" class="text-purple-400 text-xs mb-1">> project.github</label>
+        {{ form.github|add_class:"w-full px-4 py-2 rounded bg-[#1C114A] text-white" }}
+        {{ form.github.errors }}
+    </div>
+
+    <div>
+        <label for="id_discord" class="text-purple-400 text-xs mb-1">> project.discord</label>
+        {{ form.discord|add_class:"w-full px-4 py-2 rounded bg-[#1C114A] text-white" }}
+        {{ form.discord.errors }}
+    </div>
+
+    <!--END -->
+    <div class="flex justify-center">
+        <button type="submit" class="px-8 bg-gradient-to-r from-blue-500 to-purple-500 py-2 rounded-full text-lg font-semibold">
+        Save Project
+        </button>
+    </div>
+
+    <div class="flex justify-center">
+        <a href="{% url 'project_detail' project.id %}" class="text-sm text-purple-400 hover:underline">
+        ← Back to project
+        </a>
+    </div>
+    </form>
+
+    <script>
+    function toggleSearch() {
+        const box = document.getElementById('memberSearchBox');
+        box.classList.toggle('hidden');
+    }
+
+    function filterMembers() {
+        const input = document.getElementById('memberInput').value.toLowerCase();
+        const options = document.getElementById('membersSelect').options;
+        for (let i = 0; i < options.length; i++) {
+        const text = options[i].text.toLowerCase();
+        options[i].style.display = text.includes(input) ? '' : 'none';
+        }
+    }
+    </script>
+    </body>
+</html>
