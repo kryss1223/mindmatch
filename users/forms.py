@@ -1,7 +1,7 @@
 # users/forms.py
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import CustomUser, Skill, Languaje
+from .models import CustomUser, Skill, Language
 from django.core.exceptions import ValidationError
 from django_countries.widgets import CountrySelectWidget
 
